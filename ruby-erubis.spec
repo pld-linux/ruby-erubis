@@ -7,38 +7,13 @@ License:	GPL
 Group:		Development/Languages
 Source0:	http://rubygems.org/downloads/%{pkgname}-%{version}.gem
 # Source0-md5:	071dc576fe9f1c547ef2993e0be942b0
-BuildRequires:	rpmbuild(macros) >= 1.277
-BuildRequires:	ruby-modules
-%{?ruby_mod_ver_requires_eq}
+BuildRequires:	rpm-rubyprov
+BuildRequires:	rpmbuild(macros) >= 1.656
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Erubis is a fast, secure, and very extensible implementation of eRuby.
-It has the following features.
-
-- Very fast, almost three times faster than ERB and about ten percent
-  faster than eruby (implemented in C).
-- File caching of converted Ruby script support.
-- Auto escaping (sanitizing) support, it means that '<%= %>' can be
-  escaped in default. It is desirable for web application.
-- Spaces around '<% %>' are trimmed automatically only when '<%' is at
-  the beginning of line and '%>' is at the end of line.
-- Embedded pattern changeable (default '<% %>'), for example '[% %]'
-  or '<? ?>' are available.
-- Enable to handle Processing Instructions (PI) as embedded pattern
-  (ex. '<?rb ... ?>'). This is desirable for XML/HTML than '<% .. %>'
-  because the latter breaks HTML design but the former doesn't.
-- Multi-language support (Ruby/PHP/C/Java/Scheme/Perl/Javascript).
-- Context object available and easy to combine eRuby template with
-  YAML datafile (see the below example).
-- Print statement available.
-- Easy to expand and customize in subclass
-  - Print statement support
-  - Lines starting with percent character ('%') support
-  - Another embedded pattern support
-  - etc...
-- Ruby on Rails support.
-- Mod_ruby support.
 
 %package rdoc
 Summary:	HTML documentation for %{pkgname}
@@ -65,9 +40,7 @@ ri documentation for %{pkgname}.
 Dokumentacji w formacie ri dla %{pkgname}.
 
 %prep
-%setup -q -c
-%{__tar} xf %{SOURCE0} -O data.tar.gz | %{__tar} xz
-find -newer README.txt -o -print | xargs touch --reference %{SOURCE0}
+%setup -q
 
 %{__sed} -i -e 's,/usr/bin/env ruby,%{__ruby},' bin/erubis
 
@@ -76,6 +49,7 @@ rdoc --ri --op ri lib
 rdoc --op rdoc lib
 rm -r ri/{ActionView,ERB}
 rm ri/created.rid
+rm ri/cache.ri
 
 %install
 rm -rf $RPM_BUILD_ROOT
