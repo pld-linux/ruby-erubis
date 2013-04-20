@@ -1,12 +1,12 @@
 %define pkgname erubis
 Summary:	Fast, secure, and very extensible implementation of eRuby
 Name:		ruby-%{pkgname}
-Version:	2.6.5
+Version:	2.7.0
 Release:	1
 License:	GPL
 Group:		Development/Languages
 Source0:	http://rubygems.org/downloads/%{pkgname}-%{version}.gem
-# Source0-md5:	071dc576fe9f1c547ef2993e0be942b0
+# Source0-md5:	cca3cf13ef951d1fc8c124d2fde52565
 BuildRequires:	rpm-rubyprov
 BuildRequires:	rpmbuild(macros) >= 1.656
 Requires:	ruby-abstract
@@ -48,7 +48,7 @@ Dokumentacji w formacie ri dla %{pkgname}.
 %build
 rdoc --ri --op ri lib
 rdoc --op rdoc lib
-rm -r ri/{ActionView,ERB}
+rm -r ri/{ActionView,ERB,Kernel}
 rm ri/created.rid
 rm ri/cache.ri
 
