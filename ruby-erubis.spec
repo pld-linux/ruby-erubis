@@ -2,7 +2,7 @@
 Summary:	Fast, secure, and very extensible implementation of eRuby
 Name:		ruby-%{pkgname}
 Version:	2.7.0
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Languages
 Source0:	http://rubygems.org/downloads/%{pkgname}-%{version}.gem
