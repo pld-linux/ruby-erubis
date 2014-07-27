@@ -2,13 +2,15 @@
 Summary:	Fast, secure, and very extensible implementation of eRuby
 Name:		ruby-%{pkgname}
 Version:	2.7.0
-Release:	2
+Release:	3
 License:	GPL
 Group:		Development/Languages
 Source0:	http://rubygems.org/downloads/%{pkgname}-%{version}.gem
 # Source0-md5:	cca3cf13ef951d1fc8c124d2fde52565
+URL:		http://www.kuwata-lab.com/erubis/
 BuildRequires:	rpm-rubyprov
 BuildRequires:	rpmbuild(macros) >= 1.656
+BuildRequires:	sed >= 4.0
 Requires:	ruby-abstract
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -46,6 +48,9 @@ Dokumentacji w formacie ri dla %{pkgname}.
 %{__sed} -i -e 's,/usr/bin/env ruby,%{__ruby},' bin/erubis
 
 %build
+# write .gemspec
+%__gem_helper spec
+
 rdoc --ri --op ri lib
 rdoc --op rdoc lib
 rm -r ri/{ActionView,ERB,Kernel}
@@ -54,10 +59,12 @@ rm ri/cache.ri
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{ruby_rubylibdir},%{ruby_ridir},%{ruby_rdocdir}}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{ruby_vendorlibdir},%{ruby_specdir},%{ruby_ridir},%{ruby_rdocdir}}
 
 cp -a bin/* $RPM_BUILD_ROOT%{_bindir}
-cp -a lib/* $RPM_BUILD_ROOT%{ruby_rubylibdir}
+cp -a lib/* $RPM_BUILD_ROOT%{ruby_vendorlibdir}
+cp -p %{pkgname}-%{version}.gemspec $RPM_BUILD_ROOT%{ruby_specdir}
+
 cp -a ri/* $RPM_BUILD_ROOT%{ruby_ridir}
 cp -a rdoc $RPM_BUILD_ROOT%{ruby_rdocdir}/%{name}-%{version}
 
@@ -68,8 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CHANGES.txt README.txt
 %attr(755,root,root) %{_bindir}/erubis
-%{ruby_rubylibdir}/erubis.rb
-%{ruby_rubylibdir}/erubis
+%{ruby_vendorlibdir}/erubis.rb
+%{ruby_vendorlibdir}/erubis
+%{ruby_specdir}/%{pkgname}-%{version}.gemspec
 
 %files rdoc
 %defattr(644,root,root,755)
