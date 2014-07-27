@@ -1,4 +1,3 @@
-# TODO
 #
 # Conditional build:
 %bcond_without	doc			# don't build ri/rdoc
