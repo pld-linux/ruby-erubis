@@ -1,3 +1,8 @@
+# TODO
+#
+# Conditional build:
+%bcond_without	doc			# don't build ri/rdoc
+
 %define pkgname erubis
 Summary:	Fast, secure, and very extensible implementation of eRuby
 Name:		ruby-%{pkgname}
@@ -51,11 +56,13 @@ Dokumentacji w formacie ri dla %{pkgname}.
 # write .gemspec
 %__gem_helper spec
 
+%if %{with doc}
 rdoc --ri --op ri lib
 rdoc --op rdoc lib
-rm -r ri/{ActionView,ERB,Kernel}
+rm -r ri/{ActionView,ActionController,ActionPack,ERB,Kernel}
 rm ri/created.rid
 rm ri/cache.ri
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -65,8 +72,10 @@ cp -a bin/* $RPM_BUILD_ROOT%{_bindir}
 cp -a lib/* $RPM_BUILD_ROOT%{ruby_vendorlibdir}
 cp -p %{pkgname}-%{version}.gemspec $RPM_BUILD_ROOT%{ruby_specdir}
 
+%if %{with doc}
 cp -a ri/* $RPM_BUILD_ROOT%{ruby_ridir}
 cp -a rdoc $RPM_BUILD_ROOT%{ruby_rdocdir}/%{name}-%{version}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -79,6 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 %{ruby_vendorlibdir}/erubis
 %{ruby_specdir}/%{pkgname}-%{version}.gemspec
 
+%if %{with doc}
 %files rdoc
 %defattr(644,root,root,755)
 %{ruby_rdocdir}/%{name}-%{version}
@@ -86,3 +96,4 @@ rm -rf $RPM_BUILD_ROOT
 %files ri
 %defattr(644,root,root,755)
 %{ruby_ridir}/Erubis
+%endif
